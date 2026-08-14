@@ -1,0 +1,26 @@
+name: 星芽网站自动签到
+
+on:
+  schedule:
+    # 每天 UTC 16:20 (北京时间 00:20) 执行
+    - cron: '20 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: 执行签到
+        run: |
+          python checkin_auto.py
+        env:
+          XINGYA_API_BASE: https://xingya.site
