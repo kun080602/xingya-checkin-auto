@@ -168,8 +168,13 @@ def process_account(index: int, email: str, password: str) -> Dict:
         return {'success': True, 'account': index, 'quota': quota, 'date': date}
     else:
         message = result.get('message', 'Unknown error')
-        logger.info(f"  ***账号{index}*** ❌ 签到失败: {message}")
-        return {'success': False, 'account': index, 'error': message}
+        # "今日已签到"应该算作成功
+        if '今日已签到' in message or '已签到' in message:
+            logger.info(f"  ***账号{index}*** ✅ {message}")
+            return {'success': True, 'account': index, 'already_checked': True}
+        else:
+            logger.info(f"  ***账号{index}*** ❌ 签到失败: {message}")
+            return {'success': False, 'account': index, 'error': message}
 
 
 def main():
